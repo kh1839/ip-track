@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Location Tracker</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f5f5f5;
+  }
+  
+  #location-info {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+</style>
+</head>
+<body>
+<div id="location-info">
+  <h2>Location Tracker</h2>
+  <p>Click the button below to get your current location:</p>
+  <button id="getLocationBtn">Get Location</button>
+  <div id="coordinates"></div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  var getLocationBtn = document.getElementById("getLocationBtn");
+  var coordinatesDiv = document.getElementById("coordinates");
+
+  getLocationBtn.addEventListener("click", function() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        var latitude = position.coords.latitude;
+        var longitude = position.coords.longitude;
+        coordinatesDiv.innerHTML = "Latitude: " + latitude + ", Longitude: " + longitude;
+      }, function(error) {
+        console.error("Error getting user's location:", error);
+        coordinatesDiv.innerHTML = "Error getting user's location. Please try again.";
+      });
+    } else {
+      console.error("Geolocation is not supported by this browser.");
+      coordinatesDiv.innerHTML = "Geolocation is not supported by this browser.";
+    }
+  });
+});
+</script>
+</body>
+</html>
