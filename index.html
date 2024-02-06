@@ -30,12 +30,14 @@
   <p>Click the button below to get your current location:</p>
   <button id="getLocationBtn">Get Location</button>
   <div id="coordinates"></div>
+  <div id="country"></div>
 </div>
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
   var getLocationBtn = document.getElementById("getLocationBtn");
   var coordinatesDiv = document.getElementById("coordinates");
+  var countryDiv = document.getElementById("country");
 
   getLocationBtn.addEventListener("click", function() {
     if (navigator.geolocation) {
@@ -43,13 +45,26 @@ document.addEventListener("DOMContentLoaded", function() {
         var latitude = position.coords.latitude;
         var longitude = position.coords.longitude;
         coordinatesDiv.innerHTML = "Latitude: " + latitude + ", Longitude: " + longitude;
+        
+        // Fetch country name using reverse geocoding
+        fetch('https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=' + latitude + '&longitude=' + longitude + '&localityLanguage=en')
+          .then(response => response.json())
+          .then(data => {
+            countryDiv.innerHTML = "Country: " + data.countryName;
+          })
+          .catch(error => {
+            console.error("Error fetching country name:", error);
+            countryDiv.innerHTML = "Error fetching country name.";
+          });
       }, function(error) {
         console.error("Error getting user's location:", error);
         coordinatesDiv.innerHTML = "Error getting user's location. Please try again.";
+        countryDiv.innerHTML = "";
       });
     } else {
       console.error("Geolocation is not supported by this browser.");
       coordinatesDiv.innerHTML = "Geolocation is not supported by this browser.";
+      countryDiv.innerHTML = "";
     }
   });
 });
